@@ -12,9 +12,13 @@ const app = express();
 const httpServer = createServer(app);
 
 // Socket.IO setup with CORS
+// Socket.IO setup with CORS
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'https://quickpoll-frontend.vercel.app',
+    ],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -22,11 +26,12 @@ const io = new Server(httpServer, {
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://quickpoll-frontend.vercel.app', 
+  ],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 connectDB();
