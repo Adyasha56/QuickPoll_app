@@ -18,7 +18,7 @@ const allowedOrigins: string[] = [
   process.env.FRONTEND_URL || '',
 ].filter((origin): origin is string => Boolean(origin) && origin !== '');
 
-console.log('🌐 Allowed CORS Origins:', allowedOrigins);
+console.log('Allowed CORS Origins:', allowedOrigins);
 
 // Socket.IO setup with CORS
 const io = new Server(httpServer, {
@@ -38,7 +38,7 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log('❌ CORS blocked origin:', origin);
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -84,33 +84,33 @@ io.on('connection', (socket) => {
 
   socket.on('join-poll', (pollId: string) => {
     socket.join(`poll-${pollId}`);
-    console.log(`✅ User ${socket.id} joined poll room: ${pollId}`);
+    console.log(`User ${socket.id} joined poll room: ${pollId}`);
   });
 
   socket.on('leave-poll', (pollId: string) => {
     socket.leave(`poll-${pollId}`);
-    console.log(`👋 User ${socket.id} left poll room: ${pollId}`);
+    console.log(`User ${socket.id} left poll room: ${pollId}`);
   });
 
   socket.on('poll-created', (poll) => {
     io.emit('poll-created', poll);
-    console.log('📊 New poll created:', poll.title);
+    console.log('New poll created:', poll.title);
   });
 
   socket.on('poll-voted', (data) => {
     io.to(`poll-${data.pollId}`).emit('poll-voted', data);
     io.emit('poll-voted', data);
-    console.log('🗳️ Vote recorded:', data);
+    console.log('Vote recorded:', data);
   });
 
   socket.on('poll-liked', (data) => {
     io.to(`poll-${data.pollId}`).emit('poll-liked', data);
     io.emit('poll-liked', data);
-    console.log('❤️ Poll liked:', data);
+    console.log('Poll liked:', data);
   });
 
   socket.on('disconnect', () => {
-    console.log('👋 User disconnected:', socket.id);
+    console.log('User disconnected:', socket.id);
   });
 });
 
@@ -125,7 +125,7 @@ app.use((req, res) => {
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('❌ Error:', err);
+  console.error('Error:', err);
   res.status(500).json({ 
     success: false, 
     error: err.message || 'Internal server error' 
@@ -135,7 +135,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Start server
 const PORT = process.env.PORT || 5000;
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📡 Socket.IO ready for real-time updates`);
-  console.log(`🌐 Environment: ${process.env.NODE_ENV}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Socket.IO ready for real-time updates`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });
